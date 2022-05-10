@@ -21,6 +21,8 @@ const SpaceXData = () => {
 
   const [currentPage, setCurrentPage] = useState(0);
 
+  const [searchByName, setSearchByName] = useState("");
+
   useEffect(() => {
     fetchLunches();
   }, []);
@@ -62,6 +64,10 @@ const SpaceXData = () => {
     }
   };
 
+  const handleSearchByName = (e) => {
+    setSearchByName(e.target.value);
+  };
+
   return (
     <div className="container">
       <div className="filter-lunches">
@@ -78,16 +84,24 @@ const SpaceXData = () => {
           <option value="upcoming">Upcoming</option>
         </select>
       </div>
+      <div className="search">
+        <input type="text" className="form-control" placeholder="Serach by Rocket Name" onChange={(e) => handleSearchByName(e)} />
+      </div>
       <div className="row g-3">
         {currentPageLunches &&
           currentPageLunches.length > 0 &&
-          currentPageLunches.map((lunch) => {
-            return (
-              <div className="col-12 col-md-6 col-lg-4">
-                <Card lunch={lunch} />
-              </div>
-            );
-          })}
+          currentPageLunches
+            .filter((lunch) => {
+              if (searchByName === "") return lunch;
+              else if (lunch?.rocket?.rocket_name?.toLowerCase().includes(searchByName.toLowerCase())) return lunch;
+            })
+            .map((lunch) => {
+              return (
+                <div className="col-12 col-md-6 col-lg-4">
+                  <Card lunch={lunch} />
+                </div>
+              );
+            })}
       </div>
       <ReactPaginate
         previousLabel={"← Previous"}
