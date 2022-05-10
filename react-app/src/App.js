@@ -1,11 +1,17 @@
+import { React, lazy, Suspense } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
-import SpaceXData from "./pages/SpaceXData/SpaceXData";
+const SpaceXData = lazy(() => import("./pages/SpaceXData/SpaceXData"));
 
 function App() {
   return (
-    <div className="App">
-      <SpaceXData />
-    </div>
+    <Router>
+      <Suspense fallback={<p>Loading page...</p>}>
+        <Route path="/" exact>
+          <SpaceXData />
+        </Route>
+      </Suspense>
+    </Router>
   );
 }
 
