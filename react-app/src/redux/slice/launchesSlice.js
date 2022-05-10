@@ -48,8 +48,40 @@ export const lunchesSlice = createSlice({
         }),
       };
     },
+    setFailureLunches: (state, action) => {
+      return {
+        ...state,
+        lunches: action.payload.filter((launch) => {
+          return launch.launch_success === false;
+        }),
+      };
+    },
+    setSuccessfulLunches: (state, action) => {
+      return {
+        ...state,
+        lunches: action.payload.filter((launch) => {
+          return launch.launch_success === true;
+        }),
+      };
+    },
+    setUpcomingLunches: (state, action) => {
+      return {
+        ...state,
+        lunches: action.payload.filter((launch) => {
+          return launch.upcoming === true;
+        }),
+      };
+    },
   },
 });
 
-export const { setLunches, setLastWeekLunches, setLastMonthLunches, setLastYearLunches } = lunchesSlice.actions;
+export const {
+  setLunches,
+  setLastWeekLunches,
+  setLastMonthLunches,
+  setLastYearLunches,
+  setFailureLunches,
+  setSuccessfulLunches,
+  setUpcomingLunches,
+} = lunchesSlice.actions;
 export default lunchesSlice.reducer;

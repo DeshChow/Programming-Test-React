@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setLunches, setLastWeekLunches, setLastMonthLunches, setLastYearLunches } from "../../redux/slice/launchesSlice";
+import {
+  setLunches,
+  setLastWeekLunches,
+  setLastMonthLunches,
+  setLastYearLunches,
+  setFailureLunches,
+  setSuccessfulLunches,
+  setUpcomingLunches,
+} from "../../redux/slice/launchesSlice";
 import Card from "../../components/Card/Card";
 import axiosInstance from "../../services/axiosInstance";
 import ReactPaginate from "react-paginate";
@@ -43,6 +51,12 @@ const SpaceXData = () => {
       dispatch(setLastWeekLunches(lunches));
     } else if (e.target.value === "last-month") {
       dispatch(setLastMonthLunches(lunches));
+    } else if (e.target.value === "failure") {
+      dispatch(setFailureLunches(lunches));
+    } else if (e.target.value === "success") {
+      dispatch(setSuccessfulLunches(lunches));
+    } else if (e.target.value === "upcoming") {
+      dispatch(setUpcomingLunches(lunches));
     } else {
       dispatch(setLastYearLunches(lunches));
     }
@@ -59,6 +73,9 @@ const SpaceXData = () => {
           <option value="last-week">Last Week</option>
           <option value="last-month">Last Month</option>
           <option value="last-year">Last Year</option>
+          <option value="failure">Failure</option>
+          <option value="success">Success</option>
+          <option value="upcoming">Upcoming</option>
         </select>
       </div>
       <div className="row g-3">
