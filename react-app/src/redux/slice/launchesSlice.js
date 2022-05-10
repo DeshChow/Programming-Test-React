@@ -2,72 +2,72 @@ import { createSlice } from "@reduxjs/toolkit";
 import moment from "moment";
 
 const initialState = {
-  lunches: [],
+  launches: [],
 };
 
-export const lunchesSlice = createSlice({
-  name: "lunches",
+export const launchesSlice = createSlice({
+  name: "launches",
   initialState,
   reducers: {
-    setLunches: (state, action) => {
-      return { ...state, lunches: [...action.payload] };
+    getLaunches: (state, action) => {
+      return { ...state, launches: [...action.payload] };
     },
-    setLastWeekLunches: (state, action) => {
+    getLastWeekLaunches: (state, action) => {
       const todayDate = new Date();
       const startDayOfPrevWeek = moment(todayDate).subtract(1, "week").startOf("week").format("LLLL");
       const lastDayOfPrevWeek = moment(todayDate).subtract(1, "week").endOf("week").format("LLLL");
       return {
         ...state,
-        lunches: action.payload.filter((launch) => {
+        launches: action.payload.filter((launch) => {
           const launchDate = launch.launch_date_utc;
           return moment(launchDate).isBetween(startDayOfPrevWeek, lastDayOfPrevWeek);
         }),
       };
     },
-    setLastMonthLunches: (state, action) => {
+    getLastMonthLaunches: (state, action) => {
       const todayDate = new Date();
       const startDayOfPrevMonth = moment(todayDate).subtract(1, "month").startOf("month").format("LLLL");
       const lastDayOfPrevMonth = moment(todayDate).subtract(1, "month").endOf("month").format("LLLL");
       return {
         ...state,
-        lunches: action.payload.filter((launch) => {
+        launches: action.payload.filter((launch) => {
           const launchDate = launch.launch_date_utc;
           return moment(launchDate).isBetween(startDayOfPrevMonth, lastDayOfPrevMonth);
         }),
       };
     },
-    setLastYearLunches: (state, action) => {
+    getLastYearLaunches: (state, action) => {
       const todayDate = new Date();
       const startDayOfPrevYear = moment(todayDate).subtract(1, "year").startOf("year").format("LLLL");
       const lastDayOfPrevYear = moment(todayDate).subtract(1, "year").endOf("year").format("LLLL");
       return {
         ...state,
-        lunches: action.payload.filter((launch) => {
+        launches: action.payload.filter((launch) => {
           const launchDate = launch.launch_date_utc;
           return moment(launchDate).isBetween(startDayOfPrevYear, lastDayOfPrevYear);
         }),
       };
     },
-    setFailureLunches: (state, action) => {
+    getFailureLaunches: (state, action) => {
       return {
         ...state,
-        lunches: action.payload.filter((launch) => {
+        launches: action.payload.filter((launch) => {
           return launch.launch_success === false;
         }),
       };
     },
-    setSuccessfulLunches: (state, action) => {
+    getSuccessfullLaunches: (state, action) => {
       return {
         ...state,
-        lunches: action.payload.filter((launch) => {
+        launches: action.payload.filter((launch) => {
           return launch.launch_success === true;
         }),
       };
     },
-    setUpcomingLunches: (state, action) => {
+    getUpcomingLaunches: (state, action) => {
       return {
         ...state,
-        lunches: action.payload.filter((launch) => {
+        launches: action.payload.filter((launch) => {
           return launch.upcoming === true;
         }),
       };
@@ -76,12 +76,12 @@ export const lunchesSlice = createSlice({
 });
 
 export const {
-  setLunches,
-  setLastWeekLunches,
-  setLastMonthLunches,
-  setLastYearLunches,
-  setFailureLunches,
-  setSuccessfulLunches,
-  setUpcomingLunches,
-} = lunchesSlice.actions;
-export default lunchesSlice.reducer;
+  getLaunches,
+  getLastWeekLaunches,
+  getLastMonthLaunches,
+  getLastYearLaunches,
+  getFailureLaunches,
+  getSuccessfullLaunches,
+  getUpcomingLaunches,
+} = launchesSlice.actions;
+export default launchesSlice.reducer;

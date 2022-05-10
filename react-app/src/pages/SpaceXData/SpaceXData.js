@@ -1,22 +1,26 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  setLunches,
-  setLastWeekLunches,
-  setLastMonthLunches,
-  setLastYearLunches,
-  setFailureLunches,
-  setSuccessfulLunches,
-  setUpcomingLunches,
+  getLaunches,
+  getLastWeekLaunches,
+  getLastMonthLaunches,
+  getLastYearLaunches,
+  getFailureLaunches,
+  getSuccessfullLaunches,
+  getUpcomingLaunches,
 } from "../../redux/slice/launchesSlice";
 import Card from "../../components/Card/Card";
 import axiosInstance from "../../services/axiosInstance";
 import ReactPaginate from "react-paginate";
+import "./SpaceXData.css";
+import Loader from "../../components/Loader/Loader";
 
 const PER_PAGE = 9;
 
 const SpaceXData = () => {
-  const lunches = useSelector((state) => state.lunches);
+  const [loading, setLoading] = useState(true);
+
+  const launches = useSelector((state) => state.launches);
   const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -24,17 +28,20 @@ const SpaceXData = () => {
   const [searchByName, setSearchByName] = useState("");
 
   useEffect(() => {
-    fetchLunches();
+    fetchlaunches();
   }, []);
 
-  const fetchLunches = () => {
+  const fetchlaunches = () => {
     axiosInstance
       .get("/v3/launches")
       .then((res) => {
-        dispatch(setLunches(res.data));
+        dispatch(getLaunches(res.data));
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -44,23 +51,23 @@ const SpaceXData = () => {
 
   const offset = currentPage * PER_PAGE;
 
-  const currentPageLunches = lunches?.slice(offset, offset + PER_PAGE);
+  const currentPagelaunches = launches?.slice(offset, offset + PER_PAGE);
 
-  const pageCount = Math.ceil(lunches?.length / PER_PAGE);
+  const pageCount = Math.ceil(launches?.length / PER_PAGE);
 
-  const handleFilteringLunches = (e) => {
+  const handleFilteringlaunches = (e) => {
     if (e.target.value === "last-week") {
-      dispatch(setLastWeekLunches(lunches));
+      dispatch(getLastWeekLaunches(launches));
     } else if (e.target.value === "last-month") {
-      dispatch(setLastMonthLunches(lunches));
+      dispatch(getLastMonthLaunches(launches));
     } else if (e.target.value === "failure") {
-      dispatch(setFailureLunches(lunches));
+      dispatch(getFailureLaunches(launches));
     } else if (e.target.value === "success") {
-      dispatch(setSuccessfulLunches(lunches));
+      dispatch(getSuccessfullLaunches(launches));
     } else if (e.target.value === "upcoming") {
-      dispatch(setUpcomingLunches(lunches));
+      dispatch(getUpcomingLaunches(launches));
     } else {
-      dispatch(setLastYearLunches(lunches));
+      dispatch(getLastYearLaunches(launches));
     }
   };
 
@@ -70,55 +77,84 @@ const SpaceXData = () => {
 
   return (
     <div className="container">
-      <div className="filter-lunches">
-        <label htmlFor="lunches">Filter By</label>
-        <select name="lunches" id="lunches" onChange={(e) => handleFilteringLunches(e)}>
-          <option value="select-item" selected disabled>
-            Select
-          </option>
-          <option value="last-week">Last Week</option>
-          <option value="last-month">Last Month</option>
-          <option value="last-year">Last Year</option>
-          <option value="failure">Failure</option>
-          <option value="success">Success</option>
-          <option value="upcoming">Upcoming</option>
-        </select>
+      <div className="w-100 d-flex justify-content-center">
+        <h1 className="display-1">SpaceX</h1>
       </div>
-      <div className="search">
-        <input type="text" className="form-control" placeholder="Serach by Rocket Name" onChange={(e) => handleSearchByName(e)} />
-      </div>
-      <div className="row g-3">
-        {currentPageLunches &&
-          currentPageLunches.length > 0 &&
-          currentPageLunches
-            .filter((lunch) => {
-              if (searchByName === "") return lunch;
-              else if (lunch?.rocket?.rocket_name?.toLowerCase().includes(searchByName.toLowerCase())) return lunch;
-            })
-            .map((lunch) => {
-              return (
-                <div className="col-12 col-md-6 col-lg-4">
-                  <Card lunch={lunch} />
-                </div>
-              );
-            })}
-      </div>
-      <ReactPaginate
-        previousLabel={"← Previous"}
-        nextLabel={"Next →"}
-        pageCount={pageCount}
-        onPageChange={handlePageClick}
-        containerClassName={"pagination justify-content-center"}
-        pageClassName={"page-item"}
-        pageLinkClassName={"page-link"}
-        previousClassName={"page-item"}
-        previousLinkClassName={"page-link"}
-        nextClassName={"page-item"}
-        nextLinkClassName={"page-link"}
-        breakClassName={"page-item"}
-        breakLinkClassName={"page-link"}
-        activeClassName={"active"}
-      />
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <div className="w-100 mt-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <div className="w-75 filter-launches">
+              <select
+                className="form-select shadow-sm p-3 bg-white rounded"
+                name="launches"
+                id="launches"
+                onChange={(e) => handleFilteringlaunches(e)}
+                style={{ marginBottom: "2rem" }}
+              >
+                <option value="select-item" selected disabled>
+                  Select to Filter the Launches
+                </option>
+                <option value="last-week">Last Week</option>
+                <option value="last-month">Last Month</option>
+                <option value="last-year">Last Year</option>
+                <option value="failure">Failure</option>
+                <option value="success">Success</option>
+                <option value="upcoming">Upcoming</option>
+              </select>
+            </div>
+            <div className="w-75 input-group mb-3">
+              <input
+                type="text"
+                className="form-control shadow-sm p-3 mb-3 bg-white rounded"
+                placeholder="Search by Rocket Name"
+                aria-label="Search by Rocket Name"
+                aria-describedby="basic-addon2"
+                onChange={(e) => handleSearchByName(e)}
+              />
+              <span className="input-group-text  p-3 mb-3" id="basic-addon2">
+                SEARCH
+              </span>
+            </div>
+          </div>
+          <div className="row g-3">
+            {currentPagelaunches &&
+              currentPagelaunches.length > 0 &&
+              currentPagelaunches
+                // eslint-disable-next-line array-callback-return
+                .filter((launch) => {
+                  if (searchByName === "") return launch;
+                  else if (launch?.rocket?.rocket_name?.toLowerCase().includes(searchByName.toLowerCase())) return launch;
+                })
+                .map((launch) => {
+                  return (
+                    <div className="col-12 col-md-6 col-lg-4">
+                      <Card launch={launch} />
+                    </div>
+                  );
+                })}
+          </div>
+          <div className="mt-4 mb-4">
+            <ReactPaginate
+              previousLabel={"← Previous"}
+              nextLabel={"Next →"}
+              pageCount={pageCount}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination justify-content-center"}
+              pageClassName={"page-item"}
+              pageLinkClassName={"page-link"}
+              previousClassName={"page-item"}
+              previousLinkClassName={"page-link"}
+              nextClassName={"page-item"}
+              nextLinkClassName={"page-link"}
+              breakClassName={"page-item"}
+              breakLinkClassName={"page-link"}
+              activeClassName={"active"}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };

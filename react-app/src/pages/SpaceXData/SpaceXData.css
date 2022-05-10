@@ -1,0 +1,32 @@
+@media (min-width: 992px) {
+  .filter-launches {
+    width: 25% !important;
+  }
+  .input-group {
+    width: 25% !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .input-group-text {
+    display: none !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .pagination {
+    font-size: 10px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .pagination {
+    font-size: 8px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .pagination {
+    font-size: 6px !important;
+  }
+}
