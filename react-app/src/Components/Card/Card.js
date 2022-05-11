@@ -1,4 +1,5 @@
 import LazyLoad from "react-lazyload";
+import { formatDateTime } from "./../../utils/date";
 
 const Card = ({ launch }) => {
   return (
@@ -20,6 +21,8 @@ const Card = ({ launch }) => {
           {launch?.rocket?.rocket_type}
           {")"}
         </h5>
+        <h6>Mission Name: {launch?.mission_name}</h6>
+        <h6>Launch Date: {formatDateTime(launch?.launch_date_utc)}</h6>
         <p className="card-text" style={{ textAlign: "justify" }}>
           {launch?.details}
         </p>

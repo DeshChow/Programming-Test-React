@@ -12,14 +12,15 @@ import {
 import Card from "../../components/Card/Card";
 import axiosInstance from "../../services/axiosInstance";
 import ReactPaginate from "react-paginate";
-import "./SpaceXData.css";
 import Loader from "../../components/Loader/Loader";
+import "./SpaceXData.css";
 
 const PER_PAGE = 9;
 
 const SpaceXData = () => {
   const [loading, setLoading] = useState(true);
 
+  const [allLaunchesData, setAllLaunchesData] = useState([]);
   const launches = useSelector((state) => state.launches);
   const dispatch = useDispatch();
 
@@ -35,6 +36,7 @@ const SpaceXData = () => {
     axiosInstance
       .get("/v3/launches")
       .then((res) => {
+        setAllLaunchesData(res.data);
         dispatch(getLaunches(res.data));
       })
       .catch((err) => {
@@ -57,17 +59,17 @@ const SpaceXData = () => {
 
   const handleFilteringlaunches = (e) => {
     if (e.target.value === "last-week") {
-      dispatch(getLastWeekLaunches(launches));
+      dispatch(getLastWeekLaunches(allLaunchesData));
     } else if (e.target.value === "last-month") {
-      dispatch(getLastMonthLaunches(launches));
+      dispatch(getLastMonthLaunches(allLaunchesData));
     } else if (e.target.value === "failure") {
-      dispatch(getFailureLaunches(launches));
+      dispatch(getFailureLaunches(allLaunchesData));
     } else if (e.target.value === "success") {
-      dispatch(getSuccessfullLaunches(launches));
+      dispatch(getSuccessfullLaunches(allLaunchesData));
     } else if (e.target.value === "upcoming") {
-      dispatch(getUpcomingLaunches(launches));
+      dispatch(getUpcomingLaunches(allLaunchesData));
     } else {
-      dispatch(getLastYearLaunches(launches));
+      dispatch(getLastYearLaunches(allLaunchesData));
     }
   };
 
@@ -85,23 +87,24 @@ const SpaceXData = () => {
       ) : (
         <>
           <div className="w-100 mt-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
-            <div className="w-75 filter-launches">
+            <div className="w-75  input-group">
               <select
                 className="form-select shadow-sm p-3 bg-white rounded"
                 name="launches"
                 id="launches"
+                defaultValue=""
                 onChange={(e) => handleFilteringlaunches(e)}
                 style={{ marginBottom: "2rem" }}
               >
-                <option value="select-item" selected disabled>
+                <option value="" disabled>
                   Select to Filter the Launches
                 </option>
-                <option value="last-week">Last Week</option>
-                <option value="last-month">Last Month</option>
-                <option value="last-year">Last Year</option>
-                <option value="failure">Failure</option>
-                <option value="success">Success</option>
-                <option value="upcoming">Upcoming</option>
+                <option value="last-week">Last Week Launches</option>
+                <option value="last-month">Last Month Launches</option>
+                <option value="last-year">Last Year Launches</option>
+                <option value="failure">Failure Launches</option>
+                <option value="success">Successful Launches</option>
+                <option value="upcoming">Upcoming Launches</option>
               </select>
             </div>
             <div className="w-75 input-group mb-3">
@@ -127,32 +130,34 @@ const SpaceXData = () => {
                   if (searchByName === "") return launch;
                   else if (launch?.rocket?.rocket_name?.toLowerCase().includes(searchByName.toLowerCase())) return launch;
                 })
-                .map((launch) => {
+                .map((launch, index) => {
                   return (
-                    <div className="col-12 col-md-6 col-lg-4">
+                    <div className="col-12 col-md-6 col-lg-4" key={index}>
                       <Card launch={launch} />
                     </div>
                   );
                 })}
           </div>
-          <div className="mt-4 mb-4">
-            <ReactPaginate
-              previousLabel={"← Previous"}
-              nextLabel={"Next →"}
-              pageCount={pageCount}
-              onPageChange={handlePageClick}
-              containerClassName={"pagination justify-content-center"}
-              pageClassName={"page-item"}
-              pageLinkClassName={"page-link"}
-              previousClassName={"page-item"}
-              previousLinkClassName={"page-link"}
-              nextClassName={"page-item"}
-              nextLinkClassName={"page-link"}
-              breakClassName={"page-item"}
-              breakLinkClassName={"page-link"}
-              activeClassName={"active"}
-            />
-          </div>
+          {currentPagelaunches && currentPagelaunches.length > 0 && (
+            <div className="mt-4 mb-4">
+              <ReactPaginate
+                previousLabel={"← Previous"}
+                nextLabel={"Next →"}
+                pageCount={pageCount}
+                onPageChange={handlePageClick}
+                containerClassName={"pagination justify-content-center"}
+                pageClassName={"page-item"}
+                pageLinkClassName={"page-link"}
+                previousClassName={"page-item"}
+                previousLinkClassName={"page-link"}
+                nextClassName={"page-item"}
+                nextLinkClassName={"page-link"}
+                breakClassName={"page-item"}
+                breakLinkClassName={"page-link"}
+                activeClassName={"active"}
+              />
+            </div>
+          )}
         </>
       )}
     </div>
