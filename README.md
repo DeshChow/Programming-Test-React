@@ -1,4 +1,4 @@
-# How to run this project
+# How to run this project ?
 
 1) Create a folder
 2) Open terminal in that folder
