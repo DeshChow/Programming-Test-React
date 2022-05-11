@@ -3,7 +3,7 @@ import { formatDateTime } from "./../../utils/date";
 
 const Card = ({ launch }) => {
   return (
-    <div className="card h-100 shadow p-3 mb-5 bg-white rounded">
+    <div className="card h-100 shadow p-3 mb-5 bg-white rounded" data-testid={`card-${launch?.flight_number}`}>
       <LazyLoad height={200}>
         <div className="mt-2 d-flex justify-content-end">
           {launch?.launch_success ? (

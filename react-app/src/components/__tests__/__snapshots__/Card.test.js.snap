@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<div
+  className="card h-100 shadow p-3 mb-5 bg-white rounded"
+  data-testid="card-1"
+>
+  <div
+    className="lazyload-wrapper "
+  >
+    <div
+      className="lazyload-placeholder"
+      style={
+        Object {
+          "height": 200,
+        }
+      }
+    />
+  </div>
+  <div
+    className="card-body bg-light"
+  >
+    <h5
+      className="card-title"
+    >
+      Falcon 1
+      (Type-
+      Merlin A
+      )
+    </h5>
+    <h6>
+      Mission Name: 
+      FalconSat
+    </h6>
+    <h6>
+      Launch Date: 
+      March 25, 2006, 4:30:00 AM
+    </h6>
+    <p
+      className="card-text"
+      style={
+        Object {
+          "textAlign": "justify",
+        }
+      }
+    >
+      Engine failure at 33 seconds and loss of vehicle
+    </p>
+  </div>
+</div>
+`;
